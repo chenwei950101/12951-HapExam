@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hbi.core.demo.mapper.OrderLinesMapper">
+
+    <update id="updateOrderLines">
+        update HAP_OM_ORDER_LINES set INVENTORY_ITEM_ID = #{line.inventoryItemId},
+        ORDERD_QUANTITY = #{line.orderdQuantity},ORDER_QUANTITY_UOM = #{line.orderQuantityUom},
+        UNIT_SELLING_PRICE = #{line.unitSellingPrice},DESCRIPTION = #{line.description}
+        where line_id = #{line.lineId}
+    </update>
+
+    <delete id="deleteLineByHeaderId">
+        delete from HAP_OM_ORDER_LINES where header_id = #{header.headerId}
+    </delete>
+
+    <select id="selectMaxLineNumber" resultType="java.lang.Integer">
+        select max(line_number) from hap_om_order_lines where HEADER_ID = #{header.headerId};
+    </select>
+
+    <insert id="insertOrderLines" parameterType="hbi.core.demo.dto.OrderLines" useGeneratedKeys="true" keyProperty="lineId">
+        insert into HAP_OM_ORDER_LINES(header_id,line_number,inventory_item_id,orderd_quantity,
+        unit_selling_price,description,order_quantity_uom,company_id)
+        VALUES (#{headerId},#{lineNumber},#{inventoryItemId},#{orderdQuantity},
+        #{unitSellingPrice},#{description},#{orderQuantityUom},#{companyId})
+    </insert>
+
+    <!--配置订单行的信息-->
+    <resultMap id="orderLine" type="hbi.core.demo.dto.OrderLines">
+        <id property="lineId" column="aid"/>
+        <result property="headerId" column="header_id"/>
+        <result property="lineNumber" column="line_number"/>
+        <result property="inventoryItemId" column="inventory_item_id"/>
+        <result property="orderQuantityUom" column="order_quantity_uom"/>
+        <result property="unitSellingPrice" column="unit_selling_price"/>
+        <result property="orderdQuantity" column="orderd_quantity"/>
+        <result property="description" column="description"/>
+        <result property="companyId" column="company_id"/>
+        <result property="requestId" column="request_id"/>
+        <result property="programId" column="program_id"/>
+        <result property="addition1" column="addition1"/>
+        <result property="addition2" column="addition2"/>
+        <result property="addition3" column="addition3"/>
+        <result property="addition4" column="addition4"/>
+        <result property="addition5" column="addition5"/>
+        <association property="items" javaType="hbi.core.demo.dto.Items" resultMap="item"/>
+    </resultMap>
+
+    <!--配置物料的信息-->
+    <resultMap id="item" type="hbi.core.demo.dto.Items">
+        <id property="inventoryItemId" column="inventory_item_id"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemUom" column="item_uom"/>
+        <result property="itemDescription" column="item_description"/>
+        <result property="orderFlag" column="order_flag"/>
+        <result property="startActiveDate" column="start_active_date"/>
+        <result property="endActiveDate" column="end_active_date"/>
+        <result property="enabledFlag" column="enabled_flag"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="creationDate" column="creation_date"/>
+        <result property="lastUpdatedBy" column="last_updated_by"/>
+        <result property="lastUpdateDate" column="last_update_date"/>
+    </resultMap>
+</mapper>

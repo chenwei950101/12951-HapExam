@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hbi.core.demo.mapper.CustomersMapper">
+    <select id="selectCustomersByCompanyId" resultMap="customer">
+        select customer_id,customer_number,customer_name from hap_ar_customers
+         <where>
+            <if test="companyId != null and companyId != 0">
+                company_id = #{companyId}
+             </if>
+         </where>
+    </select>
+
+    <resultMap id="customer" type="hbi.core.demo.dto.Customers">
+        <id property="customerId" column="customer_id"/>
+        <result property="customerNumber" column="customer_number"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="companyId" column="company_id"/>
+        <result property="enabledFlag" column="enabled_flag"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="creationDate" column="creation_date"/>
+        <result property="lastUpdatedBy" column="last_updated_by"/>
+        <result property="lastUpdateDate" column="last_update_date"/>
+    </resultMap>
+</mapper>
